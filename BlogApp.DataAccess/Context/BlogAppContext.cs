@@ -6,14 +6,15 @@ namespace BlogApp.DataAccess.Context
 {
     public class BlogAppContext : IdentityDbContext<AppUser, AppRole, int>
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
 
-            optionsBuilder.UseSqlServer("server=DESKTOP-QSR8HKH;database= BlogAppDb;integrated security = true;TrustServerCertificate=True");
+
+        public BlogAppContext(DbContextOptions<BlogAppContext> options) : base(options)
+        {
         }
 
 
-        //public DbSet<AppUser> Users { get; set; }
+
+
 
         public DbSet<Blog> Blogs { get; set; }
 
@@ -28,7 +29,7 @@ namespace BlogApp.DataAccess.Context
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Blogs)
                 .WithMany(b => b.Comments)  // Assuming Blog has a collection of Comments
-                .HasForeignKey(c => c.IdBlog)
+                .HasForeignKey(c => c.BlogId)
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
 
             // Configure Comment -> AppUser relationship
@@ -44,6 +45,12 @@ namespace BlogApp.DataAccess.Context
                 .WithMany(u => u.Blogs)  // Assuming AppUser has a collection of Blogs
                 .HasForeignKey(b => b.AppUserId)
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+
+            modelBuilder.Entity<Blog>()
+             .HasOne(b => b.Categories) // Blog'un bir kategoriye ait olduğunu belirt
+             .WithMany(c => c.Blogs) // Kategorinin birden fazla blogu olabileceğini belirt
+             .HasForeignKey(b => b.CategoryId) // Foreign Key olarak CategoryId kullan
+            .OnDelete(DeleteBehavior.Cascade); // Kategori silindiğinde ilgili blogları sil
 
             base.OnModelCreating(modelBuilder);
         }

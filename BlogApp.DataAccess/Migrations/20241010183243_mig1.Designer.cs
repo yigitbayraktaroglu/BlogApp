@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApp.DataAccess.Migrations
 {
     [DbContext(typeof(BlogAppContext))]
-    [Migration("20241010104252_mig1")]
+    [Migration("20241010183243_mig1")]
     partial class mig1
     {
         /// <inheritdoc />
@@ -87,7 +87,6 @@ namespace BlogApp.DataAccess.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -111,7 +110,6 @@ namespace BlogApp.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -145,20 +143,16 @@ namespace BlogApp.DataAccess.Migrations
                     b.Property<int>("AppUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoriesId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Highlight")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdCategory")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -168,7 +162,6 @@ namespace BlogApp.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -178,7 +171,7 @@ namespace BlogApp.DataAccess.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("CategoriesId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Blogs");
                 });
@@ -198,7 +191,6 @@ namespace BlogApp.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -220,15 +212,14 @@ namespace BlogApp.DataAccess.Migrations
                     b.Property<int>("AppUserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("IdBlog")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -240,7 +231,7 @@ namespace BlogApp.DataAccess.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("IdBlog");
+                    b.HasIndex("BlogId");
 
                     b.ToTable("Comments");
                 });
@@ -257,11 +248,9 @@ namespace BlogApp.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LogDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -381,8 +370,8 @@ namespace BlogApp.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("BlogApp.Entity.Entities.Category", "Categories")
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
+                        .WithMany("Blogs")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -401,7 +390,7 @@ namespace BlogApp.DataAccess.Migrations
 
                     b.HasOne("BlogApp.Entity.Entities.Blog", "Blogs")
                         .WithMany("Comments")
-                        .HasForeignKey("IdBlog")
+                        .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -471,6 +460,11 @@ namespace BlogApp.DataAccess.Migrations
             modelBuilder.Entity("BlogApp.Entity.Entities.Blog", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("BlogApp.Entity.Entities.Category", b =>
+                {
+                    b.Navigation("Blogs");
                 });
 #pragma warning restore 612, 618
         }

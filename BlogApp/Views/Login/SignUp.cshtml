@@ -1,0 +1,65 @@
+﻿@model BlogApp.Models.RegisterViewModel
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BlogApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BlogApp.styles.css" asp-append-version="true" />
+</head>
+
+<body class="bg-light">
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%;">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Yeni Kayıt</h3>
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Adınız</label>
+                        <input type="text" class="form-control" id="Name" placeholder="Adınız" asp-for="Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Surname" class="form-label">Soyadınız</label>
+                        <input type="text" class="form-control" id="Surname" placeholder="Soyadınız" asp-for="Surname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Mail" class="form-label">Mail Adresiniz</label>
+                        <input type="email" class="form-control" id="Mail" placeholder="Mail Adresiniz" asp-for="Mail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Username" class="form-label">Kullanıcı Adınız</label>
+                        <input type="text" class="form-control" id="Username" placeholder="Kullanıcı Adınız" asp-for="Username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Password" class="form-label">Şifre</label>
+                        <input type="password" class="form-control" id="Password" placeholder="Şifre" asp-for="Password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="PasswordConfirm" class="form-label">Şifre Tekrar</label>
+                        <input type="password" class="form-control" id="PasswordConfirm" placeholder="Şifre Tekrar" asp-for="PasswordConfirm" required>
+                    </div>
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                    <button type="submit" class="btn btn-primary w-100">Üye Ol</button>
+                </form>
+                <div class="text-center mt-3">
+                    Zaten bir hesabınız var mı? <a href="/Login/SignIn" class="text-primary">Giriş Yap</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+   
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+﻿@model BlogApp.Models.LoginViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BlogApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BlogApp.styles.css" asp-append-version="true" />
+</head>
+
+<body class="bg-light">
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%;">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Giriş Yap</h3>
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="UserName" class="form-label">Kullanıcı Adınız</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                            <input type="text" class="form-control" id="UserName" placeholder="Kullanıcı Adınız" asp-for="UserName" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Password" class="form-label">Şifre</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                            <input type="password" class="form-control" id="Password" placeholder="Şifre" asp-for="Password" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+                    <div class="text-center mt-3">
+                        <a href="/PasswordChange/ForgotPassword" class="text-primary">Şifremi Unuttum</a>
+                    </div>
+                    <div class="text-center mt-3">
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                    </div>
+                    <div class="text-center mt-3">
+                        Bir hesabın yok mu? <a href="/Login/SignUp" class="text-primary">Üye Ol</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+</body>
+
+</html>

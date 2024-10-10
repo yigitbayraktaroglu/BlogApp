@@ -11,6 +11,8 @@
 
         public bool IsDeleted { get; set; }
 
+        public ICollection<Blog> Blogs { get; set; } = new List<Blog>();
+
 
     }
 }

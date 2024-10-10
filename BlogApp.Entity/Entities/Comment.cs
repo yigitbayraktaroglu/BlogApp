@@ -13,8 +13,7 @@
 
         public Blog Blogs { get; set; }
 
-        public int IdBlog { get; set; }
-
+        public int BlogId { get; set; }
 
 
         public AppUser AppUser { get; set; }

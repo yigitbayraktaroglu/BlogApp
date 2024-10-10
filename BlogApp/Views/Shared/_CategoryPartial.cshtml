@@ -1,0 +1,41 @@
+﻿<style>
+    .selected {
+        background-color: #007bff; /* Bootstrap primary rengi */
+        color: white; /* Yazı rengi beyaz */
+    }
+</style>
+
+
+    <h3>Categories</h3>
+    <ul class="list-group">
+        <li class="list-group-item @(Context.Request.Query["categoryId"].Count == 0 ? "selected" : "")"
+            onclick="setSelected(this, '@Url.Action("Index", "Home")')" style="cursor: pointer;">
+            All
+        </li>
+        @foreach (var category in Model) 
+        {
+        <li class="list-group-item @(Context.Request.Query["categoryId"] == category.Id.ToString() ? "selected" : "" )"
+                onclick="setSelected(this, '@Url.Action("Index", "Home", new { categoryId = category.Id })')" style="cursor: pointer;">
+                @category.Name
+            </li>
+        }
+    </ul>
+
+
+<script>
+    let lastSelected = null; 
+
+    function setSelected(element, url) {
+        
+        if (lastSelected) {
+            lastSelected.classList.remove('selected');
+        }
+
+        element.classList.add('selected');
+
+        setTimeout(function () {
+            location.href = url; 
+        }, 50); 
+        lastSelected = element; 
+    }
+</script>

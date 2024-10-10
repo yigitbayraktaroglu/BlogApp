@@ -19,7 +19,7 @@
 
         public Category Categories { get; set; }
 
-        public int IdCategory { get; set; }
+        public int CategoryId { get; set; }
 
 
         public AppUser AppUser { get; set; }
