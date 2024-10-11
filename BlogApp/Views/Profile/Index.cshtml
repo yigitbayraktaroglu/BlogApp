@@ -1,6 +1,56 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model BlogApp.Models.ProfileViewModel
+
 @{
+  
 }
-<div>Test</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Sol taraf: Kullanıcı bilgileri -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Information</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Name: </strong> @Model.Name
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Username: </strong> @Model.Username
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ taraf: Kullanıcının blogları -->
+        <div class="col-md-8">
+            <h4>@Model.Name's Blogs</h4>
+            @if (Model.Blogs != null && Model.Blogs.Any())
+            {
+                <div class="row">
+                    @foreach (var blog in Model.Blogs)
+                    {
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@blog.Title</h5>
+                                    <p class="card-text">
+                                        @blog.Content.Substring(0, Math.Min(100, blog.Content.Length)) + "..."
+                                    </p>
+                                    <a href="@Url.Action("Details", "Blog", new { id = blog.Id })" class="btn btn-primary">
+                                        Read More
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>No blogs available.</p>
+            }
+        </div>
+    </div>
+</div>

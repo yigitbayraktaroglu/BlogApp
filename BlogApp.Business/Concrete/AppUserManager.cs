@@ -21,12 +21,16 @@ namespace BlogApp.Business.Concrete
         public AppUser GetById(int id)
         {
             return _userDal.GetById(id);
-
         }
 
         public List<AppUser> GetListAll()
         {
             return _userDal.GetListAll();
+        }
+
+        public AppUser GetByUsername(string username)
+        {
+            return _userDal.GetByUsername(username);
         }
 
         public void Insert(AppUser t)
