@@ -28,24 +28,7 @@
             <h4>@Model.Name's Blogs</h4>
             @if (Model.Blogs != null && Model.Blogs.Any())
             {
-                <div class="row">
-                    @foreach (var blog in Model.Blogs)
-                    {
-                        <div class="col-md-6 mb-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">@blog.Title</h5>
-                                    <p class="card-text">
-                                        @blog.Content.Substring(0, Math.Min(100, blog.Content.Length)) + "..."
-                                    </p>
-                                    <a href="@Url.Action("Details", "Blog", new { id = blog.Id })" class="btn btn-primary">
-                                        Read More
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
+                @Html.Partial("_BlogListPartial", Model.Blogs)
             }
             else
             {

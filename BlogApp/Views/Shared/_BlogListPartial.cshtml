@@ -1,0 +1,28 @@
+﻿@model List<BlogApp.Models.BlogViewModel>
+
+<div class="row">
+    <div class="container">
+        <div class="row">
+            @if (Model.Count == 0)
+            {
+                <p>No blogs available in this category.</p>
+            }
+            else
+            {
+                @foreach (var blog in Model)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">@blog.Title</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">@blog.CategoryName</h6>
+                                <p class="card-text">@blog.Content.Substring(0, Math.Min(100, @blog.Content.Length))...</p>
+                                <p class="card-text"><small class="text-muted">Updated on @blog.UpdatedDate.ToString("MMMM dd, yyyy")</small></p>
+                                <a href="/Details/@blog.Id" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
