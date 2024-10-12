@@ -13,14 +13,17 @@ namespace BlogApp.Areas.Admin.Controllers
         private readonly IAppUserService _appUserService;
         private readonly IBlogService _blogService;
 
-        public CommentController(ICommentService commentService)
+        public CommentController(ICommentService commentService, IAppUserService appUserService, IBlogService blogService)
         {
             _commentService = commentService;
+            _appUserService = appUserService;
+            _blogService = blogService;
         }
 
         public IActionResult Index()
         {
-            var comments = _commentService.GetListAll();
+            var comments = _commentService.GetListAll().OrderByDescending(c => c.CreatedDate)
+    .ToList(); ;
             var commentViewList = new List<CommentViewModel>();
             foreach (var comment in comments)
             {

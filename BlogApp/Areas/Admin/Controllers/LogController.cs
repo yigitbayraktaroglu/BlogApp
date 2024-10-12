@@ -18,7 +18,8 @@ namespace BlogApp.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var logs = _logService.GetListAll();
+            var logs = _logService.GetListAll().OrderByDescending(l => l.LogDate)
+    .ToList(); ;
             var logViewList = new List<LogViewModel>();
             foreach (var log in logs)
             {

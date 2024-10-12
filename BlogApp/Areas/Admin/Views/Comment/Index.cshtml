@@ -9,6 +9,7 @@
             <th>Name</th>
             <th>Content</th>
             <th>Blog Title</th>
+            <th>Blog Author</th>
             <th>Created Date</th>
         </tr>
     </thead>
@@ -17,9 +18,10 @@
         {
             <tr>
                 <td>@comment.Id</td>
-                <td>@comment.Content</td>
                 <td>@comment.AppUser.UserName</td>
+                <td>@comment.Content</td>
                 <td>@comment.Blogs.Title</td>
+                <td>@comment.Blogs.AppUser.UserName</td>
                 <td>@comment.CreatedDate.ToString("g")</td>
 
             </tr>

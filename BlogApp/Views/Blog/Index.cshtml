@@ -51,8 +51,8 @@
                     <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">
-                                <a asp-controller="Profile" asp-action="Index" asp-route-username="@Model.AuthorUsername" class="text-muted">
-                                    @Model.AuthorUsername
+                                <a asp-controller="Profile" asp-action="Index" asp-route-username="@comment.AuthorUsername" class="text-muted">
+                                    @comment.AuthorUsername
                                 </a>
                             </h5>
                             <p class="card-text">@comment.Content</p>

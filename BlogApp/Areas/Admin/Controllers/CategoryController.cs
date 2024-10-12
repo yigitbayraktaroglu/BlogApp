@@ -19,7 +19,8 @@ namespace BlogApp.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var categories = _categoryService.GetListAll();
+            var categories = _categoryService.GetListAll().OrderByDescending(c => c.CreatedDate)
+    .ToList();
             var categoryViewList = new List<CategoryViewModel>();
             foreach (var category in categories)
             {

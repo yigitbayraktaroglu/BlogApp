@@ -29,7 +29,9 @@ namespace BlogApp.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var blogs = _blogService.GetListAll();
+            var blogs = _blogService.GetListAll()
+    .OrderByDescending(b => b.CreatedDate)
+    .ToList();
 
             var blogViewList = new List<BlogViewModel>();
 
@@ -103,10 +105,11 @@ namespace BlogApp.Areas.Admin.Controllers
                 blog.CategoryId = model.CategoryId;
                 blog.UpdatedDate = DateTime.Now;
                 blog.IsDraft = model.IsDraft;
+                blog.Highlight = model.Highlight;
 
                 _blogService.Update(blog);
 
-                return RedirectToAction("Detail", new { id = blog.Id });
+                return RedirectToAction("Blog", "Admin");
             }
 
             return View(model);
