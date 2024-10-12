@@ -72,7 +72,7 @@ namespace BlogApp.Areas.Admin.Controllers
                 return RedirectToAction("Category", "Admin");
             }
 
-            return View(model); .
+            return View(model);
         }
 
         [HttpPost]
