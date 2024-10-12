@@ -29,6 +29,10 @@ namespace BlogApp.Models
 
         public bool IsDraft { get; set; }
 
+        public string SortOrder { get; set; }
+
+
+
 
 
 

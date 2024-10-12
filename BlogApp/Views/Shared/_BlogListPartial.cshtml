@@ -1,7 +1,39 @@
 ﻿@model List<BlogApp.Models.BlogViewModel>
 @using System.Security.Claims
-
+@{
+    var sortOptions = new List<SelectListItem>
+    {
+        new SelectListItem { Text = "Popularity", Value = "popular" },
+        new SelectListItem { Text = "Title Ascending", Value = "title" },
+        new SelectListItem { Text = "Title Descending", Value = "title_desc" },
+        new SelectListItem { Text = "Date Ascending", Value = "date" },
+        new SelectListItem { Text = "Date Descending", Value = "date_desc" }
+    };
+}
 <div class="container">
+    <div class="row d-flex mb-3">
+        <div class="col d-flex align-items-center">
+            <form method="get" asp-controller="Home" asp-action="Index" id="searchForm" class="me-2">
+                <div class="form-group mb-0">
+                    <label for="searchTerm" class="d-none">Search</label>
+                    <input type="text" id="searchTerm" name="searchTerm" class="form-control" placeholder="Search blogs..." />
+                </div>
+            </form>
+            <button type="submit" form="searchForm" class="btn btn-primary">Search</button>
+        </div>
+        <div class="col">
+            <form method="get" asp-controller="Home" asp-action="Index" id="sortForm" class="float-end">
+                <div class="form-group mb-0">
+                    <label for="sortOrder" class="d-none">Sort By</label>
+                    <select id="sortOrder" name="sortOrder" class="form-control" asp-items="@sortOptions" onchange="updateSortOrder()">
+                        <option value="">Sort order</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+   
+
     <div class="row">
         @if (Model.Count == 0)
         {
@@ -33,7 +65,7 @@
 
                             @if (blog.IsDraft)
                             {
-                                <p class="text-warning">This blog is a draft.</p> 
+                                <p class="text-warning">This blog is a draft.</p>
                             }
                             <h5 class="card-title">@blog.Title</h5>
                             <h6 class="card-subtitle mb-2 text-muted">@blog.CategoryName</h6>
@@ -42,12 +74,12 @@
                             </p>
                             <p class="card-text">
                                 <small class="text-muted">
-    by <strong>
-        <a asp-controller="Profile" asp-action="Index" asp-route-username="@blog.AuthorUsername" class="text-muted">
-            @blog.AuthorUsername
-        </a>
-    </strong> on @blog.CreatedDate.ToString("MMMM dd, yyyy")
-</small>
+                                    by <strong>
+                                        <a asp-controller="Profile" asp-action="Index" asp-route-username="@blog.AuthorUsername" class="text-muted">
+                                            @blog.AuthorUsername
+                                        </a>
+                                    </strong> on @blog.CreatedDate.ToString("MMMM dd, yyyy")
+                                </small>
                             </p>
                             <a href="/Blog/Detail/@blog.Id" class="btn btn-primary">Read More</a>
                         </div>
@@ -68,15 +100,29 @@
                     'X-CSRF-TOKEN': $('input[name="__RequestVerificationToken"]').val() // Ensure CSRF token is included
                 }
             })
-            .then(response => {
-                if (response.ok) {
-                    window.location.reload();
-                } else {
-                    alert('Error deleting blog.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Error deleting blog.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
+    }
+    function updateSortOrder() {
+        const sortOrder = document.getElementById('sortOrder').value;
+        const url = new URL(window.location.href);
+
+        // Update the sortOrder parameter
+        if (sortOrder) {
+            url.searchParams.set('sortOrder', sortOrder);
+        } else {
+            url.searchParams.delete('sortOrder'); // Remove sortOrder if no option is selected
+        }
+
+        // Redirect to the updated URL
+        window.location.href = url.toString();
     }
 </script>
 

@@ -13,10 +13,12 @@ namespace BlogApp.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IEmailService _emailService;
-        public PasswordChangeController(UserManager<AppUser> userManager, IEmailService emailService)
+        private readonly ILoggerService _loggerService;
+        public PasswordChangeController(UserManager<AppUser> userManager, IEmailService emailService, ILoggerService loggerService)
         {
             _userManager = userManager;
             _emailService = emailService;
+            _loggerService = loggerService;
         }
 
         [HttpGet]
@@ -37,6 +39,7 @@ namespace BlogApp.Controllers
 
             await _emailService.SendEmailAsync(forgotPasswordViewModel.Mail, "Reset your password",
               $"Please reset your password by clicking this link: {passwordResetTokenLink}");
+
 
             return View();
         }
@@ -62,6 +65,7 @@ namespace BlogApp.Controllers
             var result = await _userManager.ResetPasswordAsync(user, token.ToString(), resetPasswordViewModel.Password);
             if (result.Succeeded)
             {
+                await _loggerService.Log("Reset Password", $"{user.UserName} changed password.");
                 return RedirectToAction("SignIn", "Login");
             }
             return View();

@@ -1,5 +1,6 @@
 ﻿using BlogApp.Business.Abstract;
 using BlogApp.Models;
+using BlogApp.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -10,12 +11,14 @@ namespace BlogApp.Controllers
         private readonly IAppUserService _appUserService;
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
+        private readonly ILoggerService _loggerService;
 
-        public ProfileController(IAppUserService appUserService, IBlogService blogService, ICategoryService categoryService)
+        public ProfileController(IAppUserService appUserService, IBlogService blogService, ICategoryService categoryService, ILoggerService loggerService)
         {
             _appUserService = appUserService;
             _blogService = blogService;
             _categoryService = categoryService;
+            _loggerService = loggerService;
         }
 
         [Route("Profile/{username}")]
@@ -100,7 +103,7 @@ namespace BlogApp.Controllers
                 user.UserName = model.Username;
 
                 _appUserService.Update(user); // Implement UpdateUser in your service
-
+                _loggerService.Log("Edit Profile", $"{User.Identity.Name} edit profile.");
                 return RedirectToAction("Index", new { username = user.UserName });
             }
 

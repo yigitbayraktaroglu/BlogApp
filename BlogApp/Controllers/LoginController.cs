@@ -13,12 +13,14 @@ namespace BlogApp.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailService _emailService;
+        private readonly ILoggerService _loggerService;
 
-        public LoginController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService)
+        public LoginController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService, ILoggerService loggerService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
+            _loggerService = loggerService;
         }
         [HttpGet]
         public IActionResult SignUp()
@@ -127,6 +129,7 @@ namespace BlogApp.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
+                await _loggerService.Log("Confirm Email", $"{User.Identity.Name} confirm email");
                 return RedirectToAction("Index", "Home"); // Onay başarılı ise onay sayfasını göster
             }
             return View("Error"); // Hata sayfası

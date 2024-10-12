@@ -17,18 +17,40 @@ public class HomeController : Controller
     }
 
 
-    public IActionResult Index(int CategoryId)
+    public IActionResult Index(int CategoryId, string sortOrder)
     {
 
-        var blogList = _blogService.GetListAll()
-        .Where(b => !b.IsDeleted) // Exclude deleted blogs
-        .OrderByDescending(b => b.Highlight) // Sort by highlight value
-        .ToList();
+        var blogList = _blogService.GetListAll().AsQueryable(); // Fetch all blogs as IQueryable
 
+        // Apply sorting based on sortOrder
+        switch (sortOrder)
+        {
+            case "popular":
+                blogList = blogList.OrderByDescending(b => b.Highlight);
+                break;
+            case "title_desc":
+                blogList = blogList.OrderByDescending(b => b.Title);
+                break;
+            case "date":
+                blogList = blogList.OrderBy(b => b.CreatedDate);
+                break;
+            case "date_desc":
+                blogList = blogList.OrderByDescending(b => b.CreatedDate);
+                break;
+            default:
+                blogList = blogList.OrderBy(b => b.Title);
+                break;
+        }
+
+        // Filter by CategoryId if provided
         if (CategoryId != 0)
         {
-            blogList = blogList.Where(b => b.CategoryId == CategoryId).ToList();
+            blogList = blogList.Where(b => b.CategoryId == CategoryId);
         }
+
+        // Execute the query and get the results as a list
+        var finalBlogList = blogList.ToList();
+
         var blogViewList = new List<BlogViewModel>();
 
         var categoryList = _categoryService.GetListAll();
@@ -43,7 +65,7 @@ public class HomeController : Controller
         }
 
 
-        foreach (var blog in blogList)
+        foreach (var blog in finalBlogList)
         {
             blogViewList.Add(new BlogViewModel
             {

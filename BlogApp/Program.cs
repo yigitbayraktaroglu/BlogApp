@@ -89,6 +89,7 @@ builder.Services.AddScoped<IAppUserService, AppUserManager>();
 
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ILoggerService, LoggerService>();
 
 var app = builder.Build();
 

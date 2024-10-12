@@ -1,6 +1,7 @@
 ﻿using BlogApp.Business.Abstract;
 using BlogApp.Entity.Entities;
 using BlogApp.Models;
+using BlogApp.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
@@ -13,13 +14,15 @@ namespace BlogApp.Controllers
         private readonly IBlogService _blogService;
         private readonly ICategoryService _categoryService;
         private readonly ICommentService _commentService;
+        private readonly ILoggerService _loggerService;
 
-        public BlogController(IAppUserService appUserService, IBlogService blogService, ICategoryService categoryService, ICommentService commentService)
+        public BlogController(IAppUserService appUserService, IBlogService blogService, ICategoryService categoryService, ICommentService commentService, ILoggerService loggerService)
         {
             _appUserService = appUserService;
             _blogService = blogService;
             _categoryService = categoryService;
             _commentService = commentService;
+            _loggerService = loggerService;
         }
 
         [Route("Blog/Detail/{id}")]
@@ -76,6 +79,7 @@ namespace BlogApp.Controllers
 
                 _commentService.Insert(comment);
 
+                _loggerService.Log("Add Comment", $"{commentViewModel.AuthorUsername} add comment. BlogID: {commentViewModel.BlogId}");
                 // Blog detay sayfasına geri dönüyoruz
                 return RedirectToAction("Index", new { id = commentViewModel.BlogId });
             }
@@ -108,6 +112,8 @@ namespace BlogApp.Controllers
                 // Diğer alanlar da burada eklenebilir.
             };
 
+
+
             return View(model);
         }
 
@@ -132,7 +138,7 @@ namespace BlogApp.Controllers
                 blog.IsDraft = model.IsDraft;
 
                 _blogService.Update(blog);
-
+                _loggerService.Log("Edit Blog", $"{User.Identity.Name} edit blog. BlogID: {id}");
                 return RedirectToAction("Detail", new { id = blog.Id }); // Düzenlemeden sonra blog detay sayfasına yönlendirme.
             }
 
@@ -152,7 +158,7 @@ namespace BlogApp.Controllers
             }
 
             _blogService.Delete(blog);
-
+            _loggerService.Log("Delete Blog", $"{User.Identity.Name} delete blog. BlogID: {id}");
             return Ok(); // Silme işleminden sonra blog listesini gösterecek şekilde yönlendirin.
         }
 
@@ -185,7 +191,7 @@ namespace BlogApp.Controllers
 
                 // Veritabanına kaydetme işlemi
                 _blogService.Insert(newBlog);
-
+                _loggerService.Log("Create Blog", $"{User.Identity.Name} create blog. BlogTitle: {model.Title}");
                 return RedirectPermanent("/Profile/" + _appUserService.GetById(newBlog.AppUserId).UserName);
             }
 

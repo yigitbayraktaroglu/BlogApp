@@ -1,41 +1,54 @@
 ﻿<style>
     .selected {
-        background-color: #007bff; /* Bootstrap primary rengi */
-        color: white; /* Yazı rengi beyaz */
+        background-color: #007bff; 
+        color: white; 
     }
 </style>
 
-
-    <h3>Categories</h3>
-    <ul class="list-group">
-        <li class="list-group-item @(Context.Request.Query["categoryId"].Count == 0 ? "selected" : "")"
-            onclick="setSelected(this, '@Url.Action("Index", "Home")')" style="cursor: pointer;">
-            All
-        </li>
-        @foreach (var category in Model) 
-        {
+<h3>Categories</h3>
+<ul class="list-group">
+    <li class="list-group-item @(Context.Request.Query["categoryId"].Count == 0 ? "selected" : "")"
+        onclick="setSelected(this, '@Url.Action("Index", "Home", new { categoryId = (string)null })')" style="cursor: pointer;">
+        All
+    </li>
+    @foreach (var category in Model)
+    {
         <li class="list-group-item @(Context.Request.Query["categoryId"] == category.Id.ToString() ? "selected" : "" )"
-                onclick="setSelected(this, '@Url.Action("Index", "Home", new { categoryId = category.Id })')" style="cursor: pointer;">
-                @category.Name
-            </li>
-        }
-    </ul>
-
+            onclick="setSelected(this, '@Url.Action("Index", "Home", new { categoryId = category.Id })')" style="cursor: pointer;">
+            @category.Name
+        </li>
+    }
+</ul>
 
 <script>
-    let lastSelected = null; 
+    let lastSelected = null;
 
     function setSelected(element, url) {
-        
         if (lastSelected) {
             lastSelected.classList.remove('selected');
         }
 
         element.classList.add('selected');
 
+        const currentUrl = new URL(window.location.href);
+        const searchParams = new URLSearchParams(currentUrl.search);
+
+        // Update the categoryId parameter
+        const newCategoryId = url.split("categoryId=")[1]; // Extract the new categoryId from the URL
+        if (newCategoryId) {
+            searchParams.set('categoryId', newCategoryId); // Set or update categoryId
+        } else {
+            searchParams.delete('categoryId'); // Remove categoryId if it's the "All" option
+        }
+
+        // Build the new URL
+        const newUrl = `${currentUrl.origin}${currentUrl.pathname}?${searchParams.toString()}`;
+
+        // Redirect to the updated URL
         setTimeout(function () {
-            location.href = url; 
-        }, 50); 
-        lastSelected = element; 
+            location.href = newUrl;
+        }, 50);
+
+        lastSelected = element;
     }
 </script>
