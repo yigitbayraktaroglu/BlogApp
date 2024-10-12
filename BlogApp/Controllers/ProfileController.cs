@@ -1,6 +1,7 @@
 ﻿using BlogApp.Business.Abstract;
 using BlogApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BlogApp.Controllers
 {
@@ -42,14 +43,69 @@ namespace BlogApp.Controllers
                 {
                     Id = blog.Id,
                     CategoryName = _categoryService.GetById(blog.CategoryId).Name,
+                    AppUserId = blog.AppUserId.ToString(),
+                    AuthorUsername = _appUserService.GetById(blog.AppUserId).UserName,
                     Title = blog.Title,
                     Content = blog.Content,
-                    UpdatedDate = DateTime.Now
+                    CreatedDate = blog.CreatedDate,
+                    IsDraft = blog.IsDraft,
                 });
             }
             profileViewModel.Blogs = blogViewList;
 
             return View(profileViewModel);
         }
+
+        [Route("Profile/Edit/{username}")]
+        [HttpGet]
+        public IActionResult Edit()
+        {
+            // Fetch the user's existing details from the database
+            var userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var user = _appUserService.GetById(userId); // Implement GetUserById in your service
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new ProfileViewModel
+            {
+                Id = user.Id.ToString(),
+                Name = user.Name,
+                Surname = user.Surname,
+                Username = user.UserName
+            };
+
+            return View(model);
+        }
+
+        [Route("Profile/Edit/{username}")]
+        [HttpPost]
+        public IActionResult Edit(ProfileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                var user = _appUserService.GetById(userId);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                // Update user information
+                user.Name = model.Name;
+                user.Surname = model.Surname;
+                user.UserName = model.Username;
+
+                _appUserService.Update(user); // Implement UpdateUser in your service
+
+                return RedirectToAction("Index", new { username = user.UserName });
+            }
+
+            return View(model);
+        }
     }
 }
+

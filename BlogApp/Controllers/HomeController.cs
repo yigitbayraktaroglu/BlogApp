@@ -6,19 +6,24 @@ public class HomeController : Controller
 {
     private readonly IBlogService _blogService;
     private readonly ICategoryService _categoryService;
+    private readonly IAppUserService _appUserService;
 
 
-    public HomeController(IBlogService blogService, ICategoryService categoryService)
+    public HomeController(IBlogService blogService, ICategoryService categoryService, IAppUserService appUserService)
     {
         _blogService = blogService;
         _categoryService = categoryService;
+        _appUserService = appUserService;
     }
 
 
     public IActionResult Index(int CategoryId)
     {
 
-        var blogList = _blogService.GetListAll();
+        var blogList = _blogService.GetListAll()
+        .Where(b => !b.IsDeleted) // Exclude deleted blogs
+        .OrderByDescending(b => b.Highlight) // Sort by highlight value
+        .ToList();
 
         if (CategoryId != 0)
         {
@@ -44,9 +49,11 @@ public class HomeController : Controller
             {
                 Id = blog.Id,
                 CategoryName = _categoryService.GetById(blog.CategoryId).Name,
+                AuthorUsername = _appUserService.GetById(blog.AppUserId).UserName,
                 Title = blog.Title,
                 Content = blog.Content,
-                UpdatedDate = DateTime.Now
+                CreatedDate = blog.CreatedDate,
+                IsDraft = blog.IsDraft,
             });
         }
         ViewBag.Categories = categoryViewList;

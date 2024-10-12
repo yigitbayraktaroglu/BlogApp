@@ -1,10 +1,9 @@
 ﻿using BlogApp.Entity.Entities;
 using BlogApp.Models;
-using MailKit.Net.Smtp;
+using BlogApp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MimeKit;
 
 
 namespace BlogApp.Controllers
@@ -13,9 +12,11 @@ namespace BlogApp.Controllers
     public class PasswordChangeController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
-        public PasswordChangeController(UserManager<AppUser> userManager)
+        private readonly IEmailService _emailService;
+        public PasswordChangeController(UserManager<AppUser> userManager, IEmailService emailService)
         {
             _userManager = userManager;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -34,26 +35,8 @@ namespace BlogApp.Controllers
                 token = passwordResetToken
             }, HttpContext.Request.Scheme);
 
-            MimeMessage mimeMessage = new MimeMessage();
-
-            MailboxAddress mailboxAddressFrom = new MailboxAddress("Admin", "dostdigro@gmail.com");
-
-            mimeMessage.From.Add(mailboxAddressFrom);
-
-            MailboxAddress mailboxAddressTo = new MailboxAddress("User", forgotPasswordViewModel.Mail);
-            mimeMessage.To.Add(mailboxAddressTo);
-
-            var bodyBuilder = new BodyBuilder();
-            bodyBuilder.TextBody = passwordResetTokenLink;
-            mimeMessage.Body = bodyBuilder.ToMessageBody();
-
-            mimeMessage.Subject = "Şifre Değişiklik Talebi";
-
-            SmtpClient client = new SmtpClient();
-            client.Connect("smtp.gmail.com", 587, false);
-            client.Authenticate("yigitbayraktar1907@gmail.com", "tjdkpkxfupkyvkxf");
-            client.Send(mimeMessage);
-            client.Disconnect(true);
+            await _emailService.SendEmailAsync(forgotPasswordViewModel.Mail, "Reset your password",
+              $"Please reset your password by clicking this link: {passwordResetTokenLink}");
 
             return View();
         }

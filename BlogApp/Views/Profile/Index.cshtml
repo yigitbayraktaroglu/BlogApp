@@ -1,13 +1,14 @@
-﻿@model BlogApp.Models.ProfileViewModel
+﻿@using System.Security.Claims
+@model BlogApp.Models.ProfileViewModel
 
 @{
-  
+    ViewData["Title"] = "Profile - " + @Model.Name;
 }
 
 <div class="container">
     <div class="row">
         <!-- Sol taraf: Kullanıcı bilgileri -->
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Profile Information</h5>
@@ -20,11 +21,19 @@
                         </li>
                     </ul>
                 </div>
+                @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Id)
+                {
+                    <div class="card-footer">
+                        <a asp-controller="Blog" asp-action="Create" class="btn btn-primary">Create New Blog</a> <!-- Create button -->
+                        <a asp-controller="Profile" asp-action="Edit" asp-route-username="@Model.Username" class="btn btn-secondary">Edit Profile</a>
+                    </div>
+                }
+              
             </div>
         </div>
 
         <!-- Sağ taraf: Kullanıcının blogları -->
-        <div class="col-md-8">
+        <div class="col-md-9">
             <h4>@Model.Name's Blogs</h4>
             @if (Model.Blogs != null && Model.Blogs.Any())
             {

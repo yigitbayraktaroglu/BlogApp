@@ -4,6 +4,8 @@ using BlogApp.DataAccess.Abstract;
 using BlogApp.DataAccess.Concrete.EntityFramework;
 using BlogApp.DataAccess.Context;
 using BlogApp.Entity.Entities;
+using BlogApp.Services.Abstract;
+using BlogApp.Services.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -85,6 +87,8 @@ builder.Services.AddScoped<ICommentService, CommentManager>();
 builder.Services.AddScoped<ICategoryService, CategoryManager>();
 builder.Services.AddScoped<IAppUserService, AppUserManager>();
 
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 

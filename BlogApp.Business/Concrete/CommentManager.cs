@@ -7,9 +7,11 @@ namespace BlogApp.Business.Concrete
     public class CommentManager : ICommentService
     {
         private readonly ICommentDal _commentDal;
-        public CommentManager(ICommentDal commentDal)
+        private readonly IAppUserService _appUserService;
+        public CommentManager(ICommentDal commentDal, IAppUserService appUserService)
         {
             _commentDal = commentDal;
+            _appUserService = appUserService;
         }
         public void Delete(Comment t)
         {
@@ -24,6 +26,17 @@ namespace BlogApp.Business.Concrete
         public List<Comment> GetListAll()
         {
             return _commentDal.GetListAll();
+        }
+
+        public List<Comment> GetListByBlogId(string BlogId)
+        {
+            var comments = _commentDal.GetListByBlogId(BlogId);
+            foreach (var comment in comments)
+            {
+                comment.AppUser = _appUserService.GetById(comment.AppUserId);
+            }
+
+            return comments;
         }
 
         public void Insert(Comment t)

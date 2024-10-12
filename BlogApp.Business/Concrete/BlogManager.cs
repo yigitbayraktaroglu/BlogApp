@@ -10,12 +10,14 @@ namespace BlogApp.Business.Concrete
         private readonly IBlogDal _blogdal;
         private readonly IAppUserService _appUserService;
         private readonly ICategoryService _categoryService;
+        private readonly ICommentService _commentService;
 
-        public BlogManager(IBlogDal blogdal, IAppUserService appUserService, ICategoryService categoryService)
+        public BlogManager(IBlogDal blogdal, IAppUserService appUserService, ICategoryService categoryService, ICommentService commentService)
         {
             _blogdal = blogdal;
             _appUserService = appUserService;
             _categoryService = categoryService;
+            _commentService = commentService;
         }
 
         public void Delete(Blog t)
@@ -31,7 +33,8 @@ namespace BlogApp.Business.Concrete
 
             blog.AppUser = _appUserService.GetById(blog.AppUserId);
             blog.Categories = _categoryService.GetById(blog.CategoryId);
-            return _blogdal.GetById(id);
+            blog.Comments = _commentService.GetListByBlogId(blog.Id.ToString());
+            return blog;
         }
 
         public List<Blog> GetListAll()

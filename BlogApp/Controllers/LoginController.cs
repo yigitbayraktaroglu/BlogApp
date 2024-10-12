@@ -1,5 +1,6 @@
 ﻿using BlogApp.Entity.Entities;
 using BlogApp.Models;
+using BlogApp.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,13 @@ namespace BlogApp.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailService _emailService;
 
-        public LoginController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public LoginController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
         [HttpGet]
         public IActionResult SignUp()
@@ -37,8 +40,16 @@ namespace BlogApp.Controllers
             if (p.Password == p.PasswordConfirm)
             {
                 var result = await _userManager.CreateAsync(appUser, p.Password);
+
                 if (result.Succeeded)
                 {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Login", new { userId = appUser.Id, token = token }, Request.Scheme);
+
+                    // E-posta Gönderme Servisini Kullan
+                    await _emailService.SendEmailAsync(appUser.Email, "Confirm your email",
+                        $"Please confirm your account by clicking this link: {confirmationLink}");
+
                     return RedirectToAction("SignIn");
                 }
                 else
@@ -98,6 +109,38 @@ namespace BlogApp.Controllers
             }
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("Index", "Home"); // Hatalı istek durumunda anasayfaya yönlendir
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"User with ID = {userId} not found.");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home"); // Onay başarılı ise onay sayfasını göster
+            }
+            return View("Error"); // Hata sayfası
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home"); // Anasayfaya yönlendir
+        }
     }
+
+
 }
 

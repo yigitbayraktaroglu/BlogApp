@@ -30,14 +30,14 @@ namespace BlogApp.DataAccess.Context
                 .HasOne(c => c.Blogs)
                 .WithMany(b => b.Comments)  // Assuming Blog has a collection of Comments
                 .HasForeignKey(c => c.BlogId)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+                .OnDelete(DeleteBehavior.Cascade);  // Prevent cascading deletes
 
             // Configure Comment -> AppUser relationship
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.AppUser)
                 .WithMany(u => u.Comments)  // Assuming AppUser has a collection of Comments
                 .HasForeignKey(c => c.AppUserId)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+                .OnDelete(DeleteBehavior.Cascade);  // Prevent cascading deletes
 
             // Configure Blog -> AppUser relationship
             modelBuilder.Entity<Blog>()

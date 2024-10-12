@@ -1,28 +1,105 @@
 ﻿@model List<BlogApp.Models.BlogViewModel>
+@using System.Security.Claims
 
-<div class="row">
-    <div class="container">
-        <div class="row">
-            @if (Model.Count == 0)
-            {
+<div class="container">
+    <div class="row">
+        @if (Model.Count == 0)
+        {
+            <div class="col-12">
                 <p>No blogs available in this category.</p>
-            }
-            else
+            </div>
+        }
+        else
+        {
+            @foreach (var blog in Model)
             {
-                @foreach (var blog in Model)
-                {
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">@blog.Title</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">@blog.CategoryName</h6>
-                                <p class="card-text">@blog.Content.Substring(0, Math.Min(100, @blog.Content.Length))...</p>
-                                <p class="card-text"><small class="text-muted">Updated on @blog.UpdatedDate.ToString("MMMM dd, yyyy")</small></p>
-                                <a href="/Details/@blog.Id" class="btn btn-primary">Read More</a>
-                            </div>
+                // Only show draft blogs if they belong to the logged-in user.
+                if (blog.IsDraft == true && @blog.AppUserId != User.FindFirstValue(ClaimTypes.NameIdentifier)) continue;
+
+                <div class="col-md-4 mb-4">
+                    <div class="card card-fixed-height position-relative">
+                        <div class="card-body">
+                            @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == blog.AppUserId)
+                            {
+                                <div class="card-actions position-absolute" style="top: 10px; right: 10px;">
+                                    <a href="@Url.Action("Edit", "Blog", new { id = blog.Id })" class="btn btn-sm btn-outline-warning" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-danger" title="Delete" onclick="deleteBlog('@blog.Id')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            }
+
+                            @if (blog.IsDraft)
+                            {
+                                <p class="text-warning">This blog is a draft.</p> 
+                            }
+                            <h5 class="card-title">@blog.Title</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">@blog.CategoryName</h6>
+                            <p class="card-text">
+                                @blog.Content.Substring(0, Math.Min(100, @blog.Content.Length))...
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">
+    by <strong>
+        <a asp-controller="Profile" asp-action="Index" asp-route-username="@blog.AuthorUsername" class="text-muted">
+            @blog.AuthorUsername
+        </a>
+    </strong> on @blog.CreatedDate.ToString("MMMM dd, yyyy")
+</small>
+                            </p>
+                            <a href="/Blog/Detail/@blog.Id" class="btn btn-primary">Read More</a>
                         </div>
                     </div>
-                }
+                </div>
             }
-        </div>
+        }
     </div>
+</div>
+
+<script>
+    function deleteBlog(blogId) {
+        if (confirm('Are you sure you want to delete this blog?')) {
+            fetch(`/Blog/Delete/${blogId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': $('input[name="__RequestVerificationToken"]').val() // Ensure CSRF token is included
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Error deleting blog.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+</script>
+
+<style>
+    .card-fixed-height {
+        height: 250px; /* Adjust the height as needed */
+        overflow: hidden;
+    }
+
+    .card-actions .btn {
+        margin-left: 5px;
+        font-size: 0.9rem; /* Smaller font size for compact icons */
+    }
+
+    .card-fixed-height .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
