@@ -60,16 +60,16 @@ namespace BlogApp.Areas.Admin.Controllers
         [Route("Admin/Blog/Edit")]
         public IActionResult Edit(string id)
         {
-            // Veritabanından blogu alıyoruz.
+
             var blog = _blogService.GetById(int.Parse(id));
 
             if (blog == null)
             {
-                return RedirectToAction("Error", "Home"); // Blog bulunamazsa veya kullanıcı yetkili değilse hata sayfasına yönlendir.
+                return RedirectToAction("Error", "Home");
             }
-            var categories = _categoryService.GetListAll(); // Kategorileri alın
-            ViewBag.Categories = new SelectList(categories, "Id", "Name"); // SelectList oluşturun
-            // Blog'u ViewModel'e dönüştürüp edit sayfasına gönderiyoruz.
+            var categories = _categoryService.GetListAll();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+
             var model = new BlogViewModel
             {
                 Id = blog.Id,
@@ -97,7 +97,7 @@ namespace BlogApp.Areas.Admin.Controllers
             {
                 var blog = _blogService.GetById(id);
 
-                // Blog bilgilerini güncelliyoruz.
+
                 blog.Title = model.Title;
                 blog.Content = model.Content;
                 blog.CategoryId = model.CategoryId;
@@ -106,10 +106,10 @@ namespace BlogApp.Areas.Admin.Controllers
 
                 _blogService.Update(blog);
 
-                return RedirectToAction("Detail", new { id = blog.Id }); // Düzenlemeden sonra blog detay sayfasına yönlendirme.
+                return RedirectToAction("Detail", new { id = blog.Id });
             }
 
-            return View(model); // Model geçerli değilse tekrar düzenleme sayfasını göster.
+            return View(model);
         }
 
         [HttpPost]
@@ -122,7 +122,7 @@ namespace BlogApp.Areas.Admin.Controllers
 
             _blogService.Delete(blog);
 
-            return Ok(); // Silme işleminden sonra blog listesini gösterecek şekilde yönlendirin.
+            return Ok();
         }
     }
 }

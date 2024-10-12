@@ -20,16 +20,16 @@ public class HomeController : Controller
     public IActionResult Index(string searchTerm, int CategoryId, string sortOrder)
     {
 
-        var blogList = _blogService.GetListAll().AsQueryable(); // Fetch all blogs as IQueryable
+        var blogList = _blogService.GetListAll().AsQueryable();
 
-        // Implementing the search logic
+
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
-            string lowerSearchTerm = searchTerm.ToLower(); // Convert search term to lower case
+            string lowerSearchTerm = searchTerm.ToLower();
             blogList = blogList.Where(b => b.Title.ToLower().Contains(lowerSearchTerm) ||
                                            b.Content.ToLower().Contains(lowerSearchTerm));
         }
-        // Apply sorting based on sortOrder
+
         switch (sortOrder)
         {
             case "popular":
@@ -49,13 +49,13 @@ public class HomeController : Controller
                 break;
         }
 
-        // Filter by CategoryId if provided
+
         if (CategoryId != 0)
         {
             blogList = blogList.Where(b => b.CategoryId == CategoryId);
         }
 
-        // Execute the query and get the results as a list
+
         var finalBlogList = blogList.ToList();
 
         var blogViewList = new List<BlogViewModel>();

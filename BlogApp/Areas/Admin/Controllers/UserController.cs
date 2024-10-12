@@ -42,12 +42,12 @@ namespace BlogApp.Areas.Admin.Controllers
         [Route("Admin/User/Edit")]
         public IActionResult Edit(string id)
         {
-            // Veritabanından blogu alıyoruz.
+
             var user = _appUserService.GetById(int.Parse(id));
 
             if (user == null)
             {
-                return RedirectToAction("Error", "Home"); // Blog bulunamazsa veya kullanıcı yetkili değilse hata sayfasına yönlendir.
+                return RedirectToAction("Error", "Home");
             }
 
             var model = new UserViewModel
@@ -72,7 +72,7 @@ namespace BlogApp.Areas.Admin.Controllers
             {
                 var user = _appUserService.GetById(id);
 
-                // Blog bilgilerini güncelliyoruz.
+
                 user.Name = model.Name;
                 user.Surname = model.Surname;
                 user.EmailConfirmed = model.EmailConfirmed;
@@ -84,7 +84,7 @@ namespace BlogApp.Areas.Admin.Controllers
                 return RedirectToAction("User", "Admin");
             }
 
-            return View(model); // Model geçerli değilse tekrar düzenleme sayfasını göster.
+            return View(model);
         }
 
         [HttpPost]
@@ -97,7 +97,7 @@ namespace BlogApp.Areas.Admin.Controllers
 
             _appUserService.Delete(user);
 
-            return Ok(); // Silme işleminden sonra blog listesini gösterecek şekilde yönlendirin.
+            return Ok();
         }
 
     }

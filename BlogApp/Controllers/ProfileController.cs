@@ -24,11 +24,11 @@ namespace BlogApp.Controllers
         [Route("Profile/{username}")]
         public IActionResult Index(string username, string sortOrder, string searchTerm)
         {
-            // Burada username ile profile bilgilerini bulup modeli dönebilirsiniz
+
             var profile = _appUserService.GetByUsername(username);
             if (profile == null)
             {
-                return NotFound(); // Profil bulunamazsa 404 döndür
+                return NotFound();
             }
 
             var profileViewModel = new ProfileViewModel
@@ -39,14 +39,14 @@ namespace BlogApp.Controllers
             };
             var blogViewList = new List<BlogViewModel>();
 
-            var blogList = _blogService.GetListByAppUserId(profileViewModel.Id).AsQueryable(); // Fetch all blogs as IQueryable
+            var blogList = _blogService.GetListByAppUserId(profileViewModel.Id).AsQueryable();
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                string lowerSearchTerm = searchTerm.ToLower(); // Convert search term to lower case
+                string lowerSearchTerm = searchTerm.ToLower();
                 blogList = blogList.Where(b => b.Title.ToLower().Contains(lowerSearchTerm) ||
                                                b.Content.ToLower().Contains(lowerSearchTerm));
             }
-            // Apply sorting based on sortOrder
+
             switch (sortOrder)
             {
                 case "popular":
@@ -68,7 +68,7 @@ namespace BlogApp.Controllers
 
 
 
-            // Execute the query and get the results as a list
+
             var finalBlogList = blogList.ToList();
             foreach (var blog in finalBlogList)
             {
@@ -93,9 +93,9 @@ namespace BlogApp.Controllers
         [HttpGet]
         public IActionResult Edit()
         {
-            // Fetch the user's existing details from the database
+
             var userId = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var user = _appUserService.GetById(userId); // Implement GetUserById in your service
+            var user = _appUserService.GetById(userId);
 
             if (user == null)
             {
@@ -127,12 +127,12 @@ namespace BlogApp.Controllers
                     return NotFound();
                 }
 
-                // Update user information
+
                 user.Name = model.Name;
                 user.Surname = model.Surname;
                 user.UserName = model.Username;
 
-                _appUserService.Update(user); // Implement UpdateUser in your service
+                _appUserService.Update(user);
                 _loggerService.Log("Edit Profile", $"{User.Identity.Name} edit profile.");
                 return RedirectToAction("Index", new { username = user.UserName });
             }

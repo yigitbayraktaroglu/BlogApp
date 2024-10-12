@@ -69,10 +69,10 @@ namespace BlogApp.Areas.Admin.Controllers
 
                 _categoryService.Update(category);
 
-                return RedirectToAction("Category", "Admin"); // Düzenlemeden sonra blog detay sayfasına yönlendirme.
+                return RedirectToAction("Category", "Admin");
             }
 
-            return View(model); // Model geçerli değilse tekrar düzenleme sayfasını göster.
+            return View(model); .
         }
 
         [HttpPost]
@@ -85,7 +85,7 @@ namespace BlogApp.Areas.Admin.Controllers
 
             _categoryService.Delete(category);
 
-            return Ok(); // Silme işleminden sonra blog listesini gösterecek şekilde yönlendirin.
+            return Ok();
         }
     }
 }

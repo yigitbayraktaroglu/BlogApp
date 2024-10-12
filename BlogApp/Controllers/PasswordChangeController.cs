@@ -59,7 +59,7 @@ namespace BlogApp.Controllers
             var token = TempData["token"];
             if (userid == null || token == null)
             {
-                //hata mesajı
+
             }
             var user = await _userManager.FindByIdAsync(userid.ToString());
             var result = await _userManager.ResetPasswordAsync(user, token.ToString(), resetPasswordViewModel.Password);

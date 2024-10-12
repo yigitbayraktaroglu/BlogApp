@@ -33,24 +33,24 @@ function setSelected(element, url) {
     const currentUrl = new URL(window.location.href);
     const searchParams = new URLSearchParams(currentUrl.search);
 
-    // Update the categoryId parameter
-    const newCategoryId = url.split("categoryId=")[1]; // Extract the new categoryId from the URL
+    
+    const newCategoryId = url.split("categoryId=")[1]; 
     if (newCategoryId) {
-        searchParams.set('categoryId', newCategoryId); // Set or update categoryId
+        searchParams.set('categoryId', newCategoryId); 
     } else {
-        searchParams.delete('categoryId'); // Remove categoryId if it's the "All" option
+        searchParams.delete('categoryId'); 
     }
 
-    // Check if searchTerm exists
+  
     if (searchParams.has('searchTerm')) {
-        // Reset searchTerm if we're changing the category
-        searchParams.delete('searchTerm'); // Remove the searchTerm
+       
+        searchParams.delete('searchTerm'); 
     }
 
-    // Build the new URL
+  
     const newUrl = `${currentUrl.origin}${currentUrl.pathname}?${searchParams.toString()}`;
 
-    // Redirect to the updated URL
+  
     setTimeout(function () {
         location.href = newUrl;
     }, 50);

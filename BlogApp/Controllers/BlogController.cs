@@ -29,24 +29,24 @@ namespace BlogApp.Controllers
         public IActionResult Index(string id)
         {
             int x = int.Parse(id);
-            // Blogu veritabanından bul
+
             var blog = _blogService.GetById(x);
 
             if (blog == null)
             {
-                // Eğer blog bulunamazsa NotFound döner
+
                 return View("Error");
             }
 
 
-            // Blog'u BlogViewModel'e dönüştür
+
             var blogViewModel = new BlogViewModel
             {
                 Id = blog.Id,
                 Title = blog.Title,
                 Content = blog.Content,
-                AuthorUsername = blog.AppUser.UserName,  // AppUser ile ilişki varsayıldı
-                CategoryName = blog.Categories.Name,       // Category ile ilişki varsayıldı
+                AuthorUsername = blog.AppUser.UserName,
+                CategoryName = blog.Categories.Name,
                 CreatedDate = blog.CreatedDate,
                 UpdatedDate = blog.UpdatedDate,
                 Comments = blog.Comments.Select(c => new CommentViewModel
@@ -54,10 +54,10 @@ namespace BlogApp.Controllers
                     AuthorUsername = c.AppUser.UserName,
                     Content = c.Content,
                     CreatedDate = c.CreatedDate
-                }).ToList() // Yorumları CommentViewModel'e dönüştürüyoruz
+                }).ToList()
             };
 
-            // View'e BlogViewModel'i gönder
+
             return View(blogViewModel);
         }
 
@@ -68,7 +68,7 @@ namespace BlogApp.Controllers
             if (ModelState.IsValid)
             {
                 var Id = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                // Yorumun veritabanına eklenmesi
+
                 var comment = new Comment
                 {
                     Content = commentViewModel.Content,
@@ -80,11 +80,11 @@ namespace BlogApp.Controllers
                 _commentService.Insert(comment);
 
                 _loggerService.Log("Add Comment", $"{commentViewModel.AuthorUsername} add comment. BlogID: {commentViewModel.BlogId}");
-                // Blog detay sayfasına geri dönüyoruz
+
                 return RedirectToAction("Index", new { id = commentViewModel.BlogId });
             }
 
-            // Eğer formda hata varsa tekrar blog sayfasına dön
+
             return View(commentViewModel);
         }
 
@@ -92,16 +92,16 @@ namespace BlogApp.Controllers
         [Route("Blog/Edit/{id}")]
         public IActionResult Edit(int id)
         {
-            // Veritabanından blogu alıyoruz.
+
             var blog = _blogService.GetById(id);
 
             if (blog == null || blog.AppUserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
-                return RedirectToAction("Error", "Home"); // Blog bulunamazsa veya kullanıcı yetkili değilse hata sayfasına yönlendir.
+                return RedirectToAction("Error", "Home");
             }
-            var categories = _categoryService.GetListAll(); // Kategorileri alın
-            ViewBag.Categories = new SelectList(categories, "Id", "Name"); // SelectList oluşturun
-            // Blog'u ViewModel'e dönüştürüp edit sayfasına gönderiyoruz.
+            var categories = _categoryService.GetListAll();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+
             var model = new BlogViewModel
             {
                 Id = blog.Id,
@@ -109,7 +109,7 @@ namespace BlogApp.Controllers
                 Content = blog.Content,
                 CategoryId = blog.CategoryId.ToString(),
                 IsDraft = blog.IsDraft,
-                // Diğer alanlar da burada eklenebilir.
+
             };
 
 
@@ -127,10 +127,10 @@ namespace BlogApp.Controllers
 
                 if (blog == null || blog.AppUserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier))
                 {
-                    return RedirectToAction("Error", "Home"); // Blog bulunamazsa veya kullanıcı yetkili değilse hata sayfasına yönlendir.
+                    return RedirectToAction("Error", "Home");
                 }
 
-                // Blog bilgilerini güncelliyoruz.
+
                 blog.Title = model.Title;
                 blog.Content = model.Content;
                 blog.CategoryId = Int32.Parse(model.CategoryId);
@@ -139,10 +139,10 @@ namespace BlogApp.Controllers
 
                 _blogService.Update(blog);
                 _loggerService.Log("Edit Blog", $"{User.Identity.Name} edit blog. BlogID: {id}");
-                return RedirectToAction("Detail", new { id = blog.Id }); // Düzenlemeden sonra blog detay sayfasına yönlendirme.
+                return RedirectToAction("Detail", new { id = blog.Id });
             }
 
-            return View(model); // Model geçerli değilse tekrar düzenleme sayfasını göster.
+            return View(model);
         }
 
         [HttpPost]
@@ -159,14 +159,14 @@ namespace BlogApp.Controllers
 
             _blogService.Delete(blog);
             _loggerService.Log("Delete Blog", $"{User.Identity.Name} delete blog. BlogID: {id}");
-            return Ok(); // Silme işleminden sonra blog listesini gösterecek şekilde yönlendirin.
+            return Ok();
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            var categories = _categoryService.GetListAll(); // Kategorileri alın
-            ViewBag.Categories = new SelectList(categories, "Id", "Name"); // SelectList oluşturun
+            var categories = _categoryService.GetListAll();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View();
         }
 
@@ -175,7 +175,7 @@ namespace BlogApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Burada blogu veritabanına kaydedin
+
                 var newBlog = new Blog
                 {
                     Title = model.Title,
@@ -189,13 +189,13 @@ namespace BlogApp.Controllers
 
                 };
 
-                // Veritabanına kaydetme işlemi
+
                 _blogService.Insert(newBlog);
                 _loggerService.Log("Create Blog", $"{User.Identity.Name} create blog. BlogTitle: {model.Title}");
                 return RedirectPermanent("/Profile/" + _appUserService.GetById(newBlog.AppUserId).UserName);
             }
 
-            return View(model); // Eğer ModelState geçerli değilse, aynı sayfayı yeniden göster
+            return View(model);
         }
 
 

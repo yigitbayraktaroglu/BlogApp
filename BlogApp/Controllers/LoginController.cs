@@ -49,7 +49,7 @@ namespace BlogApp.Controllers
                     var token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
                     var confirmationLink = Url.Action("ConfirmEmail", "Login", new { userId = appUser.Id, token = token }, Request.Scheme);
 
-                    // E-posta Gönderme Servisini Kullan
+
                     await _emailService.SendEmailAsync(appUser.Email, "Confirm your email",
                         $"Please confirm your account by clicking this link: {confirmationLink}");
 
@@ -119,7 +119,7 @@ namespace BlogApp.Controllers
         {
             if (userId == null || token == null)
             {
-                return RedirectToAction("Index", "Home"); // Hatalı istek durumunda anasayfaya yönlendir
+                return RedirectToAction("Index", "Home");
             }
 
             var user = await _userManager.FindByIdAsync(userId);
@@ -132,9 +132,9 @@ namespace BlogApp.Controllers
             if (result.Succeeded)
             {
                 await _loggerService.Log("Confirm Email", $"{User.Identity.Name} confirm email");
-                return RedirectToAction("Index", "Home"); // Onay başarılı ise onay sayfasını göster
+                return RedirectToAction("Index", "Home");
             }
-            return View("Error"); // Hata sayfası
+            return View("Error");
         }
 
         [HttpPost]
@@ -142,7 +142,7 @@ namespace BlogApp.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home"); // Anasayfaya yönlendir
+            return RedirectToAction("Index", "Home");
         }
     }
 
