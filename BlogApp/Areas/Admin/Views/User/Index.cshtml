@@ -1,0 +1,60 @@
+﻿@model List<BlogApp.Areas.Admin.Models.UserViewModel>
+
+<h2>Users</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Is Active</th>
+            <th>Email Confirmed</th>
+            
+            <th>-</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.Name</td>
+                <td>@user.Surname</td>
+                <td>@user.IsActive</td>
+                <td>@user.EmailConfirmed</td>
+                
+                <td>
+                    <a asp-controller="User" asp-action="Edit" asp-route-Id="@user.Id" class="btn btn-primary">Edit</a>
+                    <button class="btn btn-danger" onclick="deleteUser(@user.Id)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+      function deleteUser(userId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+            fetch(`/Admin/User/Delete?id=${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': $('input[name="__RequestVerificationToken"]').val() // Ensure CSRF token is included
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Error deleting user.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+
+</script>

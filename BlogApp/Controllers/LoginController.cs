@@ -14,13 +14,15 @@ namespace BlogApp.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly ILoggerService _loggerService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public LoginController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService, ILoggerService loggerService)
+        public LoginController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService, ILoggerService loggerService, IServiceProvider serviceProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
             _loggerService = loggerService;
+            _serviceProvider = serviceProvider;
         }
         [HttpGet]
         public IActionResult SignUp()
@@ -32,13 +34,12 @@ namespace BlogApp.Controllers
         {
             AppUser appUser = new AppUser()
             {
-
                 Name = p.Name,
                 Surname = p.Surname,
                 Email = p.Mail,
                 UserName = p.Username
-
             };
+
             if (p.Password == p.PasswordConfirm)
             {
                 var result = await _userManager.CreateAsync(appUser, p.Password);
@@ -64,6 +65,7 @@ namespace BlogApp.Controllers
             }
             return View(p);
         }
+
         [HttpGet]
         public IActionResult SignIn()
         {

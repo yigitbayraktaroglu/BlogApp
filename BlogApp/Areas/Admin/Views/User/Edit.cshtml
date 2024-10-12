@@ -1,0 +1,36 @@
+﻿@model BlogApp.Areas.Admin.Models.UserViewModel
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label for="Title">Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="Content">Surname</label>
+            <input type="text" class="form-control" id="Surname" name="Surname" value="@Model.Surname" required />
+        </div>
+
+        <div class="form-group form-check mt-3">
+            <input type="checkbox" asp-for="EmailConfirmed" class="form-check-input" />
+            <label class="form-check-label" asp-for="EmailConfirmed">Email Confirmed</label>
+        </div>
+
+        <div class="form-group form-check mt-3">
+            <input type="checkbox" asp-for="IsActive" class="form-check-input" />
+            <label class="form-check-label" asp-for="IsActive">Active?</label>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+        <a asp-controller="Admin" asp-action="User" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>

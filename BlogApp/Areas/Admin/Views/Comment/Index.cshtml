@@ -1,0 +1,29 @@
+﻿@model List<BlogApp.Areas.Admin.Models.CommentViewModel>
+
+<h2>Comments</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Content</th>
+            <th>Blog Title</th>
+            <th>Created Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var comment in Model)
+        {
+            <tr>
+                <td>@comment.Id</td>
+                <td>@comment.Content</td>
+                <td>@comment.AppUser.UserName</td>
+                <td>@comment.Blogs.Title</td>
+                <td>@comment.CreatedDate.ToString("g")</td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+

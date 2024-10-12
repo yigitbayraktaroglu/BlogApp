@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews(options =>
 {
     var policy = new AuthorizationPolicyBuilder()
@@ -25,14 +24,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<BlogAppContext>(options =>
     options.UseSqlServer(connectionString));
 
-
-
-
-
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(connectionString));
-//builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<AppUser, AppRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<BlogAppContext>()
@@ -68,7 +59,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
 
     options.LoginPath = "/Login/SignIn";
-    options.AccessDeniedPath = "/Login/SignInd";
+    options.AccessDeniedPath = "/Login/SignIn";
     options.SlidingExpiration = true;
 });
 

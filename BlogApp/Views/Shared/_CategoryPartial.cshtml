@@ -21,34 +21,40 @@
 </ul>
 
 <script>
-    let lastSelected = null;
+  let lastSelected = null;
 
-    function setSelected(element, url) {
-        if (lastSelected) {
-            lastSelected.classList.remove('selected');
-        }
-
-        element.classList.add('selected');
-
-        const currentUrl = new URL(window.location.href);
-        const searchParams = new URLSearchParams(currentUrl.search);
-
-        // Update the categoryId parameter
-        const newCategoryId = url.split("categoryId=")[1]; // Extract the new categoryId from the URL
-        if (newCategoryId) {
-            searchParams.set('categoryId', newCategoryId); // Set or update categoryId
-        } else {
-            searchParams.delete('categoryId'); // Remove categoryId if it's the "All" option
-        }
-
-        // Build the new URL
-        const newUrl = `${currentUrl.origin}${currentUrl.pathname}?${searchParams.toString()}`;
-
-        // Redirect to the updated URL
-        setTimeout(function () {
-            location.href = newUrl;
-        }, 50);
-
-        lastSelected = element;
+function setSelected(element, url) {
+    if (lastSelected) {
+        lastSelected.classList.remove('selected');
     }
+
+    element.classList.add('selected');
+
+    const currentUrl = new URL(window.location.href);
+    const searchParams = new URLSearchParams(currentUrl.search);
+
+    // Update the categoryId parameter
+    const newCategoryId = url.split("categoryId=")[1]; // Extract the new categoryId from the URL
+    if (newCategoryId) {
+        searchParams.set('categoryId', newCategoryId); // Set or update categoryId
+    } else {
+        searchParams.delete('categoryId'); // Remove categoryId if it's the "All" option
+    }
+
+    // Check if searchTerm exists
+    if (searchParams.has('searchTerm')) {
+        // Reset searchTerm if we're changing the category
+        searchParams.delete('searchTerm'); // Remove the searchTerm
+    }
+
+    // Build the new URL
+    const newUrl = `${currentUrl.origin}${currentUrl.pathname}?${searchParams.toString()}`;
+
+    // Redirect to the updated URL
+    setTimeout(function () {
+        location.href = newUrl;
+    }, 50);
+
+    lastSelected = element;
+}
 </script>
