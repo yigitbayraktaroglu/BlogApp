@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row d-flex mb-3">
         <div class="col d-flex align-items-center">
-            <form method="get" asp-controller="Home" asp-action="Index" id="searchForm" class="me-2">
+            <form method="get" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Index" id="searchForm" class="me-2">
                 <div class="form-group mb-0">
                     <label for="searchTerm" class="d-none">Search</label>
                     <input type="text" id="searchTerm" name="searchTerm" class="form-control" placeholder="Search blogs..." />
@@ -22,7 +22,7 @@
             <button type="submit" form="searchForm" class="btn btn-primary">Search</button>
         </div>
         <div class="col">
-            <form method="get" asp-controller="Home" asp-action="Index" id="sortForm" class="float-end">
+            <form method="get" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Index" id="sortForm" class="float-end">
                 <div class="form-group mb-0">
                     <label for="sortOrder" class="d-none">Sort By</label>
                     <select id="sortOrder" name="sortOrder" class="form-control" asp-items="@sortOptions" onchange="updateSortOrder()">

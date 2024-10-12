@@ -22,7 +22,7 @@ namespace BlogApp.Controllers
         }
 
         [Route("Profile/{username}")]
-        public IActionResult Index(string username)
+        public IActionResult Index(string username, string sortOrder, string searchTerm)
         {
             // Burada username ile profile bilgilerini bulup modeli dönebilirsiniz
             var profile = _appUserService.GetByUsername(username);
@@ -39,8 +39,38 @@ namespace BlogApp.Controllers
             };
             var blogViewList = new List<BlogViewModel>();
 
-            var blogList = _blogService.GetListByAppUserId(profileViewModel.Id);
-            foreach (var blog in blogList)
+            var blogList = _blogService.GetListByAppUserId(profileViewModel.Id).AsQueryable(); // Fetch all blogs as IQueryable
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string lowerSearchTerm = searchTerm.ToLower(); // Convert search term to lower case
+                blogList = blogList.Where(b => b.Title.ToLower().Contains(lowerSearchTerm) ||
+                                               b.Content.ToLower().Contains(lowerSearchTerm));
+            }
+            // Apply sorting based on sortOrder
+            switch (sortOrder)
+            {
+                case "popular":
+                    blogList = blogList.OrderByDescending(b => b.Highlight);
+                    break;
+                case "title_desc":
+                    blogList = blogList.OrderByDescending(b => b.Title);
+                    break;
+                case "date":
+                    blogList = blogList.OrderBy(b => b.CreatedDate);
+                    break;
+                case "date_desc":
+                    blogList = blogList.OrderByDescending(b => b.CreatedDate);
+                    break;
+                default:
+                    blogList = blogList.OrderBy(b => b.Title);
+                    break;
+            }
+
+
+
+            // Execute the query and get the results as a list
+            var finalBlogList = blogList.ToList();
+            foreach (var blog in finalBlogList)
             {
                 blogViewList.Add(new BlogViewModel
                 {

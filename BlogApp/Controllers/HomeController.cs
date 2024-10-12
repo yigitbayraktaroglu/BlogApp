@@ -17,11 +17,18 @@ public class HomeController : Controller
     }
 
 
-    public IActionResult Index(int CategoryId, string sortOrder)
+    public IActionResult Index(string searchTerm, int CategoryId, string sortOrder)
     {
 
         var blogList = _blogService.GetListAll().AsQueryable(); // Fetch all blogs as IQueryable
 
+        // Implementing the search logic
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            string lowerSearchTerm = searchTerm.ToLower(); // Convert search term to lower case
+            blogList = blogList.Where(b => b.Title.ToLower().Contains(lowerSearchTerm) ||
+                                           b.Content.ToLower().Contains(lowerSearchTerm));
+        }
         // Apply sorting based on sortOrder
         switch (sortOrder)
         {
