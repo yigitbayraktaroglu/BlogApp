@@ -5,35 +5,27 @@
     ViewData["Title"] = "Profile - " + @Model.Name;
 }
 
-<div class="container">
+<div class="container py-4">
     <div class="row">
         <!-- Sol taraf: Kullanıcı bilgileri -->
-        <div class="col-md-3">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Profile Information</h5>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Name: </strong> @Model.Name
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Username: </strong> @Model.Username
-                        </li>
-                    </ul>
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">@Model.Name</h5>
+                    <p class="text-muted">@Model.Username</p>
                 </div>
                 @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Id)
                 {
-                    <div class="card-footer">
-                        <a asp-controller="Blog" asp-action="Create" class="btn btn-primary">Create New Blog</a> <!-- Create button -->
-                        <a asp-controller="Profile" asp-action="Edit" asp-route-username="@Model.Username" class="btn btn-secondary">Edit Profile</a>
+                    <div class="card-footer text-center">
+                        <a asp-controller="Blog" asp-action="Create" class="btn btn-primary w-100 mb-2">Create New Blog</a>
+                        <a asp-controller="Profile" asp-action="Edit" asp-route-username="@Model.Username" class="btn btn-secondary w-100">Edit Profile</a>
                     </div>
                 }
-              
             </div>
         </div>
 
         <!-- Sağ taraf: Kullanıcının blogları -->
-        <div class="col-md-9">
+        <div class="col-lg-9 col-md-8">
             <h4>@Model.Name's Blogs</h4>
             @if (Model.Blogs != null && Model.Blogs.Any())
             {
@@ -46,3 +38,12 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Mobil için bazı düzenlemeler */
+    @@media (max-width: 576px) {
+        .card-footer a {
+            margin-bottom: 10px;
+        }
+    }
+</style>

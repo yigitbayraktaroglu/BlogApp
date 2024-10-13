@@ -1,60 +1,53 @@
 ﻿<style>
     .selected {
-        background-color: #007bff; 
-        color: white; 
+        background-color: #0d6efd; 
+        color: white;
     }
 </style>
 
 <h3>Categories</h3>
 <ul class="list-group">
-    <li class="list-group-item @(Context.Request.Query["categoryId"].Count == 0 ? "selected" : "")"
+    <li class="list-group-item list-group-item-action @(Context.Request.Query["categoryId"].Count == 0 ? "selected" : "")"
         onclick="setSelected(this, '@Url.Action("Index", "Home", new { categoryId = (string)null })')" style="cursor: pointer;">
         All
     </li>
     @foreach (var category in Model)
     {
-        <li class="list-group-item @(Context.Request.Query["categoryId"] == category.Id.ToString() ? "selected" : "" )"
+        <li class="list-group-item list-group-item-action @(Context.Request.Query["categoryId"] == category.Id.ToString() ? "selected" : "")"
             onclick="setSelected(this, '@Url.Action("Index", "Home", new { categoryId = category.Id })')" style="cursor: pointer;">
             @category.Name
         </li>
     }
 </ul>
 
+
 <script>
-  let lastSelected = null;
+    let lastSelected = document.querySelector('.selected');
 
-function setSelected(element, url) {
-    if (lastSelected) {
-        lastSelected.classList.remove('selected');
+    function setSelected(element, url) {
+        if (lastSelected) {
+            lastSelected.classList.remove('selected');
+        }
+
+        element.classList.add('selected');
+        lastSelected = element;
+
+        const currentUrl = new URL(window.location.href);
+        const searchParams = new URLSearchParams(currentUrl.search);
+
+        const newCategoryId = url.split("categoryId=")[1];
+        if (newCategoryId) {
+            searchParams.set('categoryId', newCategoryId);
+        } else {
+            searchParams.delete('categoryId');
+        }
+
+        if (searchParams.has('searchTerm')) {
+            searchParams.delete('searchTerm');
+        }
+
+        const newUrl = `${currentUrl.origin}${currentUrl.pathname}?${searchParams.toString()}`;
+
+        window.location.href = newUrl;
     }
-
-    element.classList.add('selected');
-
-    const currentUrl = new URL(window.location.href);
-    const searchParams = new URLSearchParams(currentUrl.search);
-
-    
-    const newCategoryId = url.split("categoryId=")[1]; 
-    if (newCategoryId) {
-        searchParams.set('categoryId', newCategoryId); 
-    } else {
-        searchParams.delete('categoryId'); 
-    }
-
-  
-    if (searchParams.has('searchTerm')) {
-       
-        searchParams.delete('searchTerm'); 
-    }
-
-  
-    const newUrl = `${currentUrl.origin}${currentUrl.pathname}?${searchParams.toString()}`;
-
-  
-    setTimeout(function () {
-        location.href = newUrl;
-    }, 50);
-
-    lastSelected = element;
-}
 </script>

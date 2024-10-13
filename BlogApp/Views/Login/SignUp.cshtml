@@ -22,37 +22,37 @@
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%;">
             <div class="card-body">
-                <h3 class="card-title text-center mb-4">Yeni Kayıt</h3>
+                <h3 class="card-title text-center mb-4">New Registration</h3>
                 <form method="post">
                     <div class="mb-3">
-                        <label for="Name" class="form-label">Adınız</label>
-                        <input type="text" class="form-control" id="Name" placeholder="Adınız" asp-for="Name" required>
+                        <label for="Name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="Name" placeholder="Name" asp-for="Name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="Surname" class="form-label">Soyadınız</label>
-                        <input type="text" class="form-control" id="Surname" placeholder="Soyadınız" asp-for="Surname" required>
+                        <label for="Surname" class="form-label">Surname</label>
+                        <input type="text" class="form-control" id="Surname" placeholder="Surname" asp-for="Surname" required>
                     </div>
                     <div class="mb-3">
-                        <label for="Mail" class="form-label">Mail Adresiniz</label>
-                        <input type="email" class="form-control" id="Mail" placeholder="Mail Adresiniz" asp-for="Mail" required>
+                        <label for="Mail" class="form-label">Mail</label>
+                        <input type="email" class="form-control" id="Mail" placeholder="Mail" asp-for="Mail" required>
                     </div>
                     <div class="mb-3">
-                        <label for="Username" class="form-label">Kullanıcı Adınız</label>
-                        <input type="text" class="form-control" id="Username" placeholder="Kullanıcı Adınız" asp-for="Username" required>
+                        <label for="Username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="Username" placeholder="Username" asp-for="Username" required>
                     </div>
                     <div class="mb-3">
-                        <label for="Password" class="form-label">Şifre</label>
-                        <input type="password" class="form-control" id="Password" placeholder="Şifre" asp-for="Password" required>
+                        <label for="Password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="Password" placeholder="Password" asp-for="Password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="PasswordConfirm" class="form-label">Şifre Tekrar</label>
-                        <input type="password" class="form-control" id="PasswordConfirm" placeholder="Şifre Tekrar" asp-for="PasswordConfirm" required>
+                        <label for="PasswordConfirm" class="form-label">Password Again</label>
+                        <input type="password" class="form-control" id="PasswordConfirm" placeholder="Password Again" asp-for="PasswordConfirm" required>
                     </div>
                     <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-                    <button type="submit" class="btn btn-primary w-100">Üye Ol</button>
+                    <button type="submit" class="btn btn-primary w-100">Sign Up</button>
                 </form>
                 <div class="text-center mt-3">
-                    Zaten bir hesabınız var mı? <a href="/Login/SignIn" class="text-primary">Giriş Yap</a>
+                    Already have an account? <a href="/Login/SignIn" class="text-primary">Sign In</a>
                 </div>
             </div>
         </div>
