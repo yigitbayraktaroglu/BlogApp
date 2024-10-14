@@ -90,18 +90,21 @@
 </div>
 
 <script>
-    function deleteBlog(blogId) {
+    function deleteBlog(Id) {
         if (confirm('Are you sure you want to delete this blog?')) {
-            fetch(`/Blog/Delete/${blogId}`, {
+            
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            fetch(`/Blog/Delete/${Id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': $('input[name="__RequestVerificationToken"]').val() // Ensure CSRF token is included
+                    'X-CSRF-TOKEN': token 
                 }
             })
                 .then(response => {
                     if (response.ok) {
-                        window.location.reload();
+                        window.location.reload(); 
                     } else {
                         alert('Error deleting blog.');
                     }
@@ -113,14 +116,14 @@
         const sortOrder = document.getElementById('sortOrder').value;
         const url = new URL(window.location.href);
 
-        // Update the sortOrder parameter
+        
         if (sortOrder) {
             url.searchParams.set('sortOrder', sortOrder);
         } else {
-            url.searchParams.delete('sortOrder'); // Remove sortOrder if no option is selected
+            url.searchParams.delete('sortOrder'); 
         }
 
-        // Redirect to the updated URL
+      
         window.location.href = url.toString();
     }
 </script>
