@@ -91,4 +91,7 @@ public class HomeController : Controller
         return View(blogViewList);
     }
 
+    public IActionResult Error() { return View(); }
+    public IActionResult NotFound() { return View(); }
+
 }
