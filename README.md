@@ -15,14 +15,6 @@ BlogApp is a blogging platform built using .NET 8.0. This project allows users t
 - **C#**
 - **HTML, CSS, JavaScript**
 
-## Installation
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/yigitbayraktaroglu/BlogApp.git
-    ```
-2. Open the solution file `BlogApp.sln` in Visual Studio.
-3. Restore NuGet packages.
-4. Run the project.
 ## Pages
 ### Sign In
 ![Screenshot 2024-10-13 202123](https://github.com/user-attachments/assets/39f0befc-cd73-4273-a6c6-45206e91d02a)
@@ -39,9 +31,3 @@ BlogApp is a blogging platform built using .NET 8.0. This project allows users t
 
 
 
-
-## Contributing
-Contributions are welcome! Please create a pull request for any improvements or features you'd like to add.
-
-## License
-This project is licensed under the MIT License.
