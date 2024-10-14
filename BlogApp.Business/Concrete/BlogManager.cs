@@ -33,7 +33,7 @@ namespace BlogApp.Business.Concrete
 
             blog.AppUser = _appUserService.GetById(blog.AppUserId);
             blog.Categories = _categoryService.GetById(blog.CategoryId);
-            blog.Comments = _commentService.GetListByBlogId(blog.Id.ToString());
+            blog.Comments = _commentService.GetListByBlogId(blog.Id);
             return blog;
         }
 
@@ -44,7 +44,15 @@ namespace BlogApp.Business.Concrete
 
         public List<Blog> GetListByAppUserId(string appUserId)
         {
-            return _blogdal.GetListByAppUserId(appUserId);
+            if (int.TryParse(appUserId, out var Id))
+            {
+                return _blogdal.GetListByAppUserId(Id);
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
         public void Insert(Blog t)

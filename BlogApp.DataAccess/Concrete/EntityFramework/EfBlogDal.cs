@@ -12,11 +12,10 @@ namespace BlogApp.DataAccess.Concrete.EntityFramework
             _context = context;
         }
 
-        public List<Blog> GetListByAppUserId(string appUserId)
+        public List<Blog> GetListByAppUserId(int appUserId)
         {
-            int Id = Int32.Parse(appUserId);
             return _context.Set<Blog>()
-                           .Where(blog => blog.AppUserId == Id)
+                           .Where(blog => blog.AppUserId == appUserId)
                            .ToList();
         }
     }

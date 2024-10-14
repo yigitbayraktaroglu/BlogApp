@@ -28,29 +28,30 @@ namespace BlogApp.DataAccess.Context
             // Configure Comment -> Blog relationship
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Blogs)
-                .WithMany(b => b.Comments)  // Assuming Blog has a collection of Comments
+                .WithMany(b => b.Comments)
                 .HasForeignKey(c => c.BlogId)
-                .OnDelete(DeleteBehavior.Cascade);  // Prevent cascading deletes
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Configure Comment -> AppUser relationship
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.AppUser)
-                .WithMany(u => u.Comments)  // Assuming AppUser has a collection of Comments
+                .WithMany(u => u.Comments)
                 .HasForeignKey(c => c.AppUserId)
-                .OnDelete(DeleteBehavior.Cascade);  // Prevent cascading deletes
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Configure Blog -> AppUser relationship
             modelBuilder.Entity<Blog>()
                 .HasOne(b => b.AppUser)
-                .WithMany(u => u.Blogs)  // Assuming AppUser has a collection of Blogs
+                .WithMany(u => u.Blogs)
                 .HasForeignKey(b => b.AppUserId)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+                .OnDelete(DeleteBehavior.Cascade);
 
+            // Configure Blog -> Category relationship
             modelBuilder.Entity<Blog>()
-             .HasOne(b => b.Categories) // Blog'un bir kategoriye ait olduğunu belirt
-             .WithMany(c => c.Blogs) // Kategorinin birden fazla blogu olabileceğini belirt
-             .HasForeignKey(b => b.CategoryId) // Foreign Key olarak CategoryId kullan
-            .OnDelete(DeleteBehavior.Cascade); // Kategori silindiğinde ilgili blogları sil
+             .HasOne(b => b.Categories)
+             .WithMany(c => c.Blogs)
+             .HasForeignKey(b => b.CategoryId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -13,11 +13,10 @@ namespace BlogApp.DataAccess.Concrete.EntityFramework
         }
 
 
-        public List<Comment> GetListByBlogId(string blogId)
+        public List<Comment> GetListByBlogId(int blogId)
         {
-            int Id = Int32.Parse(blogId);
             return _context.Comments
-                           .Where(comment => comment.BlogId == Id)
+                           .Where(comment => comment.BlogId == blogId)
                            .ToList();
         }
 

@@ -18,6 +18,7 @@ namespace BlogApp.Business.Concrete
             _commentDal.Delete(t);
         }
 
+
         public Comment GetById(int id)
         {
             return _commentDal.GetById(id);
@@ -28,7 +29,7 @@ namespace BlogApp.Business.Concrete
             return _commentDal.GetListAll();
         }
 
-        public List<Comment> GetListByBlogId(string BlogId)
+        public List<Comment> GetListByBlogId(int BlogId)
         {
             var comments = _commentDal.GetListByBlogId(BlogId);
             foreach (var comment in comments)
